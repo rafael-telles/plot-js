@@ -4915,6 +4915,8 @@ window.Plot = function Plot(selector, func) {
 	glMatrix.mat2d.translate(matrix, matrix, [this.canvas.width * 0.5, this.canvas.height * 0.5]);
 	glMatrix.mat2d.scale(matrix, matrix, [50, -50]);
 
+	this.context.lineCap = 'round';
+
 	var self = this;
 	this.canvas.addEventListener('touchstart', function(e) {
 		position[0] = matrix[4];
@@ -4954,6 +4956,7 @@ Plot.prototype.updateMatrix = function() {
 	glMatrix.vec2.transformMat2d(bottomRightCorner, glMatrix.vec2.fromValues(this.canvas.width, this.canvas.height), invertedMatrix);
 }
 Plot.prototype.renderAxis = function() {
+	this.context.lineWidth = 1;
 	this.context.strokeStyle = "gray";
 	this.context.beginPath();
 	this.context.moveTo(0, matrix[5]);
@@ -4971,6 +4974,7 @@ Plot.prototype.render = function() {
 	this.updateMatrix();
 	this.renderAxis();	
 
+	this.context.lineWidth = 2;
 	this.context.strokeStyle = "black";
 	this.context.beginPath();
 	for(var x = topLeftCorner[0]; x < bottomRightCorner[0]; x += 1 / matrix[0]) {
