@@ -1,0 +1,24 @@
+{
+  "name": "plot-js",
+  "version": "0.0.1",
+  "homepage": "https://github.com/raftelti/plot-js",
+  "authors": [
+    "Rafael Telles <raftel.ti@gmail.com>"
+  ],
+  "description": "A simple and fast function plotter library.",
+  "moduleType": [
+    "node"
+  ],
+  "keywords": [
+    "plot",
+    "math"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
