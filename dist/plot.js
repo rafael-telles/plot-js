@@ -4967,6 +4967,20 @@ Plot.prototype.renderAxis = function() {
 	this.context.moveTo(matrix[4], 0);
 	this.context.lineTo(matrix[4], this.canvas.height);
 	this.context.stroke();
+
+	for(var x = matrix[4] % matrix[0]; x < this.canvas.width; x += matrix[0]) {
+		this.context.beginPath();
+		this.context.moveTo(x, matrix[5] - 5);
+		this.context.lineTo(x, matrix[5] + 5);
+		this.context.stroke();
+	}
+
+	for(var y = matrix[5] % matrix[0]; y < this.canvas.height; y += matrix[0]) {
+		this.context.beginPath();
+		this.context.moveTo(matrix[4] - 5, y);
+		this.context.lineTo(matrix[4] + 5, y);
+		this.context.stroke();
+	}
 };
 Plot.prototype.render = function() {
 	this.clear();
