@@ -1,10 +1,14 @@
 {
-  "name": "plot",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "name": "plot-js",
+  "version": "0.0.1",
+  "description": "A simple and fast function plotter library.",
+  "main": "src/index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/raftelti/plot-js.git"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "echo \"Error: no test!\" && exit 1",
     "browserify": "browserify src/index.js -o dist/plot.js",
     "build": "npm run browserify"
   },
@@ -13,10 +17,6 @@
   "dependencies": {
     "browserify": "^11.0.1",
     "gl-matrix": "^2.3.1",
-    "gl-vec2": "^1.0.0",
-    "hammerjs": "^2.0.4",
-    "infinite-canvas": "^1.0.0",
     "minify": "^1.4.19",
-    "vectors": "^0.1.0"
   }
 }
