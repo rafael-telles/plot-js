@@ -1,7 +1,5 @@
-var glMatrix = require('gl-matrix');
-
-var matrix = glMatrix.mat2d.create();
-glMatrix.mat3.scale(matrix, matrix, [50, -50]);
+var glMatrix = window.glMatrix = require('gl-matrix');
+var matrix = window.matrix = glMatrix.mat2d.create();
 
 var invertedMatrix = glMatrix.mat2d.create();
 var topLeftCorner = glMatrix.vec2.create();
@@ -15,6 +13,9 @@ var lastDistance = 0;
 window.Plot = function Plot(selector, func) {
 	this.canvas = document.querySelector(selector);
 	this.context = this.canvas.getContext('2d');
+
+	glMatrix.mat2d.translate(matrix, matrix, [this.canvas.width * 0.5, this.canvas.height * 0.5]);
+	glMatrix.mat2d.scale(matrix, matrix, [50, -50]);
 
 	var self = this;
 	this.canvas.addEventListener('touchstart', function(e) {
@@ -39,11 +40,12 @@ window.Plot = function Plot(selector, func) {
 			lastDistance = distance;
 		}
 
-		self.updateMatrix();
 		self.render();
 	});
 
 	this.func = func;
+
+	this.render();
 }
 Plot.prototype.clear = function() {
 	this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -67,6 +69,8 @@ Plot.prototype.renderAxis = function() {
 };
 Plot.prototype.render = function() {
 	this.clear();
+
+	this.updateMatrix();
 	this.renderAxis();	
 
 	this.context.strokeStyle = "black";
