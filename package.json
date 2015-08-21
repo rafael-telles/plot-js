@@ -17,6 +17,6 @@
   "dependencies": {
     "browserify": "^11.0.1",
     "gl-matrix": "^2.3.1",
-    "minify": "^1.4.19",
+    "minify": "^1.4.19"
   }
 }
