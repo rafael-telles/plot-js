@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Plot demo</title>
+	<style>
+	* {
+		margin: 0;
+		padding: 0;
+		overflow: hidden;
+	}
+	canvas {
+		border: 1px solid black;
+	}
+	</style>
+</head>
+<body>
+	<canvas id="plot"></canvas>
+
+	<script>
+		var canvas = document.getElementById('plot');
+		canvas.width = window.innerWidth;
+		canvas.height = window.innerHeight;
+	</script>
+	<script src="plot.js"></script>
+</body>
+</html>
