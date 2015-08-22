@@ -4930,6 +4930,65 @@ window.Plot = function Plot(selector, func) {
 		glMatrix.vec2.transformMat2d(bottomRightCorner, glMatrix.vec2.fromValues(canvas.width, canvas.height), invertedMatrix);
 	}
 	function renderAxis() {
+		context.font = "8px sans";
+		context.textBaseline = 'middle';
+		context.textAlign="center"; 
+
+		var coef = Math.pow(0.1, ~~(Math.log10(matrix[0])) - 1);
+		var step = coef * ([5,2,1][~~(3 * Math.log10(matrix[0])) % 3]);
+		console.log(step);
+
+		var firstX = topLeftCorner[0];
+		var lastX = bottomRightCorner[0];
+		firstX -= firstX % step;
+		lastX += lastX % step;
+
+
+		context.lineWidth = 0.5;
+		context.strokeStyle = 'lightgray';
+
+		var p;
+		for(var x = firstX; x <= lastX; x += step) {
+			if(x == 0) continue;
+			p = glMatrix.vec2.fromValues(x, 0);
+			glMatrix.vec2.transformMat2d(p, p, matrix);
+
+			context.beginPath();
+			context.moveTo(p[0], p[1] - 2);
+			context.lineTo(p[0], p[1] + 2);
+			context.stroke();
+
+ 			context.fillText(x.toFixed(4), p[0], p[1] + 8);
+
+ 			context.beginPath();
+			context.moveTo(p[0], 0);
+			context.lineTo(p[0], canvas.height);
+			context.stroke();
+		}
+		var firstY = bottomRightCorner[1];
+		var lastY = topLeftCorner[1];
+		firstY -= firstY % step;
+		lastY += lastY % step;
+
+		context.textAlign="right"; 
+		for(var y = firstY; y <= lastY; y += step) {
+			if(y == 0) continue;
+			p = glMatrix.vec2.fromValues(0, y);
+			glMatrix.vec2.transformMat2d(p, p, matrix);
+
+			context.beginPath();
+			context.moveTo(p[0] - 2, p[1]);
+			context.lineTo(p[0] + 2, p[1]);
+			context.stroke();
+
+ 			context.fillText(y.toFixed(4), p[0] - 4, p[1]);
+
+ 			context.beginPath();
+			context.moveTo(0, p[1]);
+			context.lineTo(canvas.width, p[1]);
+			context.stroke();
+		}
+
 		context.lineWidth = 1;
 		context.strokeStyle = 'gray';
 
@@ -4942,20 +5001,6 @@ window.Plot = function Plot(selector, func) {
 		context.moveTo(matrix[4], 0);
 		context.lineTo(matrix[4], canvas.height);
 		context.stroke();
-
-		for(var x = matrix[4] % matrix[0]; x < canvas.width; x += matrix[0]) {
-			context.beginPath();
-			context.moveTo(x, matrix[5] - 5);
-			context.lineTo(x, matrix[5] + 5);
-			context.stroke();
-		}
-
-		for(var y = matrix[5] % matrix[0]; y < canvas.height; y += matrix[0]) {
-			context.beginPath();
-			context.moveTo(matrix[4] - 5, y);
-			context.lineTo(matrix[4] + 5, y);
-			context.stroke();
-		}
 	}
 	function render() {
 		clear();
