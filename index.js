@@ -10,7 +10,6 @@ window.Plot = function Plot(selector, func) {
 	var dy = canvas.height * 0.5;
 
 	context.lineCap = 'round';
-
 	function zoom(multiplier, x, y) {
 		scale *= multiplier;
 		dx = (dx - x) * multiplier + x;
@@ -117,19 +116,33 @@ window.Plot = function Plot(selector, func) {
 		lastX = e.touches[0].clientX;
 		lastY = e.touches[0].clientY;
 
-		if(e.touches.length >= 2) {
+		if(e.touches.length == 2) {
 			lastDistance = Math.sqrt(Math.pow(e.touches[0].clientX - e.touches[1].clientX, 2) + Math.pow(e.touches[0].clientY - e.touches[1].clientY, 2));
+		
+			var averageX = (e.touches[0].clientX + e.touches[1].clientX) * 0.5;
+			var averageY = (e.touches[0].clientY + e.touches[1].clientY) * 0.5;
+			
+			lastX = averageX;
+			lastY = averageY;
 		}
 	});
 	
 	canvas.addEventListener('touchmove', function(e) {
-		if(e.touches.length >= 2) {
+		if(e.touches.length == 2) {
 			var distance = Math.sqrt(Math.pow(e.touches[0].clientX - e.touches[1].clientX, 2) + Math.pow(e.touches[0].clientY - e.touches[1].clientY, 2));
 			var multiplier = distance / lastDistance;
 
-			zoom(multiplier, (e.touches[0].clientX + e.touches[1].clientX) * 0.5, (e.touches[0].clientY + e.touches[1].clientY) * 0.5);
+			var averageX = (e.touches[0].clientX + e.touches[1].clientX) * 0.5;
+			var averageY = (e.touches[0].clientY + e.touches[1].clientY) * 0.5;
+			zoom(multiplier, averageX, averageY);
 
 			lastDistance = distance;
+
+			dx += averageX - lastX;
+			dy += averageY - lastY;
+
+			lastX = averageX;
+			lastY = averageY;
 		} else {
 			dx += e.touches[0].clientX - lastX;
 			dy += e.touches[0].clientY - lastY;
@@ -142,7 +155,7 @@ window.Plot = function Plot(selector, func) {
 	});
 
 	canvas.addEventListener('touchend', function(e) {
-		if(e.touches.length >= 1) {
+		if(e.touches.length == 1) {
 			lastX = e.touches[0].clientX;
 			lastY = e.touches[0].clientY;
 		}
