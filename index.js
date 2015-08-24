@@ -91,36 +91,39 @@ window.Plot = function Plot(selector, func) {
 		context.stroke();
 	}
 
-	var startX, startY;
+	var lastX = 0, lastY = 0;
 	var mouseDown = false;
 	canvas.addEventListener('mousedown', function(e) {
 		mouseDown = true;
-		startX = dx - e.clientX;
-		startY = dy - e.clientY;
+		lastX = e.clientX;
+		lastY = e.clientY;
 	});
 	canvas.addEventListener('mouseup', function(e) {
 		mouseDown = false;
 	})
 	canvas.addEventListener('mousemove', function(e) {
 		if(mouseDown) {
-			dx = e.clientX + startX;
-			dy = e.clientY + startY;
+			dx += e.clientX - lastX;
+			dy += e.clientY - lastY;
 
+			lastX = e.clientX;
+			lastY = e.clientY;
 			render();
 		}
 	});
 	
+	var lastDistance;
 	canvas.addEventListener('touchstart', function(e) {
-		startX = dx - e.touches[0].clientX;
-		startY = dy - e.touches[0].clientY;
+		lastX = e.touches[0].clientX;
+		lastY = e.touches[0].clientY;
 
-		if(e.touches.length === 2) {
+		if(e.touches.length >= 2) {
 			lastDistance = Math.sqrt(Math.pow(e.touches[0].clientX - e.touches[1].clientX, 2) + Math.pow(e.touches[0].clientY - e.touches[1].clientY, 2));
 		}
 	});
 	
 	canvas.addEventListener('touchmove', function(e) {
-		if(e.touches.length === 2) {
+		if(e.touches.length >= 2) {
 			var distance = Math.sqrt(Math.pow(e.touches[0].clientX - e.touches[1].clientX, 2) + Math.pow(e.touches[0].clientY - e.touches[1].clientY, 2));
 			var multiplier = distance / lastDistance;
 
@@ -128,8 +131,11 @@ window.Plot = function Plot(selector, func) {
 
 			lastDistance = distance;
 		} else {
-			dx = e.touches[0].clientX + startX;
-			dy = e.touches[0].clientY + startY;
+			dx += e.touches[0].clientX - lastX;
+			dy += e.touches[0].clientY - lastY;
+
+			lastX = e.touches[0].clientX;
+			lastY = e.touches[0].clientY;
 		}
 
 		render();
