@@ -5,7 +5,7 @@ window.Plot = function Plot(selector, func) {
 
 	var func = this.func = func;
 
-	var scale = 50;
+	var scale = 100;
 	var dx = canvas.width * 0.5;
 	var dy = canvas.height * 0.5;
 
@@ -24,8 +24,7 @@ window.Plot = function Plot(selector, func) {
 		context.textBaseline = 'middle';
 		context.textAlign="center"; 
 
-		var coef = Math.pow(0.1, ~~(Math.log(scale)/Math.log(10)) - 1);
-		var step = coef * ([5,2,1][~~(3 * Math.log(scale)/Math.log(10)) % 3]) * scale;
+		var step = Math.pow(2, ~~Math.log(100 / scale)/Math.log(2)) * scale;
 
 		context.strokeStyle = 'lightgray';
 
@@ -37,7 +36,7 @@ window.Plot = function Plot(selector, func) {
 			context.lineTo(x, dy + 5);
 			context.stroke();
 			
- 			context.fillText(((x - dx)/scale).toFixed(4), x, dy + 8);
+ 			context.fillText(((x - dx)/scale).toFixed(2), x, dy + 8);
 
 			context.lineWidth = 0.5;
  			context.beginPath();
@@ -56,7 +55,7 @@ window.Plot = function Plot(selector, func) {
 			context.lineTo(dx + 5, y);
 			context.stroke();
 			
- 			context.fillText(((dy - y)/scale).toFixed(4), dx - 4, y);
+ 			context.fillText(((dy - y)/scale).toFixed(2), dx - 4, y);
 
 			context.lineWidth = 0.5;
  			context.beginPath();
