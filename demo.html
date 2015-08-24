@@ -17,11 +17,13 @@
 <body>
 	<canvas id="plot"></canvas>
 
+	<script src="../src/index.js"></script>
 	<script>
 		var canvas = document.getElementById('plot');
 		canvas.width = window.innerWidth;
 		canvas.height = window.innerHeight;
+
+		window.plot = new Plot('#plot', function(x) {return Math.sin(x);});
 	</script>
-	<script src="plot.js"></script>
 </body>
 </html>
