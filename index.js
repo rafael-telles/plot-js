@@ -9,6 +9,12 @@ window.Plot = function Plot(selector, func) {
 	var dx = canvas.width * 0.5;
 	var dy = canvas.height * 0.5;
 
+	var currentX, currentY;
+	var lastX, lastY;
+	var mouseDown = false;
+
+	var lastDistance;
+
 	context.lineCap = 'round';
 	function zoom(multiplier, x, y) {
 		scale *= multiplier;
@@ -51,6 +57,11 @@ window.Plot = function Plot(selector, func) {
 		context.fillRect(0, dy, canvas.width, 1);
 		context.fillRect(dx, 0, 1, canvas.height);
 	}
+	function renderTip() {
+		context.beginPath();
+		context.arc(currentX, -scale * func((currentX - dx) / scale) + dy, 3, 0, 2 * Math.PI);
+		context.fill();
+	}
 	function render() {
 		clear();
 
@@ -63,10 +74,9 @@ window.Plot = function Plot(selector, func) {
 			context.lineTo(x, -scale * func((x - dx) / scale) + dy);
 		}
 		context.stroke();
-	}
 
-	var lastX = 0, lastY = 0;
-	var mouseDown = false;
+		renderTip();
+	}
 	canvas.addEventListener('mousedown', function(e) {
 		mouseDown = true;
 		lastX = e.clientX;
@@ -76,17 +86,20 @@ window.Plot = function Plot(selector, func) {
 		mouseDown = false;
 	})
 	canvas.addEventListener('mousemove', function(e) {
+		currentX = e.clientX;
+		correntY = e.clientY;
+
 		if(mouseDown) {
 			dx += e.clientX - lastX;
 			dy += e.clientY - lastY;
 
 			lastX = e.clientX;
 			lastY = e.clientY;
-			render();
 		}
+		
+		render();
 	});
 	
-	var lastDistance;
 	canvas.addEventListener('touchstart', function(e) {
 		lastX = e.touches[0].clientX;
 		lastY = e.touches[0].clientY;
