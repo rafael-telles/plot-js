@@ -120,9 +120,6 @@ window.Plot = function Plot(selector, func) {
 	});
 	
 	canvas.addEventListener('touchmove', function(e) {
-		dx = e.touches[0].clientX + startX;
-		dy = e.touches[0].clientY + startY;
-		
 		if(e.touches.length === 2) {
 			var distance = Math.sqrt(Math.pow(e.touches[0].clientX - e.touches[1].clientX, 2) + Math.pow(e.touches[0].clientY - e.touches[1].clientY, 2));
 			var multiplier = distance / lastDistance;
@@ -130,6 +127,9 @@ window.Plot = function Plot(selector, func) {
 			zoom(multiplier, (e.touches[0].clientX + e.touches[1].clientX) * 0.5, (e.touches[0].clientY + e.touches[1].clientY) * 0.5);
 
 			lastDistance = distance;
+		} else {
+			dx = e.touches[0].clientX + startX;
+			dy = e.touches[0].clientY + startY;
 		}
 
 		render();
