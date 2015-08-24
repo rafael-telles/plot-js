@@ -25,56 +25,31 @@ window.Plot = function Plot(selector, func) {
 
 		var step = Math.pow(2, ~~(Math.log(100 / scale)/Math.log(2))) * scale;
 
-		context.strokeStyle = 'lightgray';
+		context.fillStyle = 'lightgray';
 
 		for(var x = dx % step; x <= canvas.width; x += step) {
 			if(x == dx) continue;
-			context.lineWidth = 1;
-			context.beginPath();
-			context.moveTo(x, dy - 5);
-			context.lineTo(x, dy + 5);
-			context.stroke();
+
+			context.fillRect(x, dy - 2, 1, 4);
+			context.fillRect(x, 0, 1, canvas.height);
 			
  			context.fillText(((x - dx)/scale).toFixed(2), x, dy + 8);
-
-			context.lineWidth = 0.5;
- 			context.beginPath();
-			context.moveTo(x, 0);
-			context.lineTo(x, canvas.height);
-			context.stroke();
 		}
 
 		context.textAlign = "right"; 
 		for(var y = dy % step; y <= canvas.height; y += step) {
 			if(y == dy) continue;
 
-			context.lineWidth = 1;
-			context.beginPath();
-			context.moveTo(dx - 5, y);
-			context.lineTo(dx + 5, y);
-			context.stroke();
+			context.fillRect(dx - 2, y, 4, 1);
+			context.fillRect(0, y, canvas.width, 1);
 			
  			context.fillText(((dy - y)/scale).toFixed(2), dx - 4, y);
-
-			context.lineWidth = 0.5;
- 			context.beginPath();
-			context.moveTo(0, y);
-			context.lineTo(canvas.width, y);
-			context.stroke();
 		}
 
-		context.lineWidth = 1;
-		context.strokeStyle = 'gray';
+		context.fillStyle = 'black';
 
-		context.beginPath();
-		context.moveTo(0, dy);
-		context.lineTo(canvas.width, dy);
-		context.stroke();
-
-		context.beginPath();
-		context.moveTo(dx, 0);
-		context.lineTo(dx, canvas.height);
-		context.stroke();
+		context.fillRect(0, dy, canvas.width, 1);
+		context.fillRect(dx, 0, 1, canvas.height);
 	}
 	function render() {
 		clear();
