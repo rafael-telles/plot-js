@@ -141,6 +141,13 @@ window.Plot = function Plot(selector, func) {
 		render();
 	});
 
+	canvas.addEventListener('touchend', function(e) {
+		if(e.touches.length >= 1) {
+			lastX = e.touches[0].clientX;
+			lastY = e.touches[0].clientY;
+		}
+	});
+
 	canvas.addEventListener('wheel', function(e) {
 		var multiplier = 0.9;
 		if(e.deltaY < 0) {
