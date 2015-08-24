@@ -24,7 +24,7 @@ window.Plot = function Plot(selector, func) {
 		context.textBaseline = 'middle';
 		context.textAlign="center"; 
 
-		var step = Math.pow(2, ~~Math.log(100 / scale)/Math.log(2)) * scale;
+		var step = Math.pow(2, ~~(Math.log(100 / scale)/Math.log(2))) * scale;
 
 		context.strokeStyle = 'lightgray';
 
