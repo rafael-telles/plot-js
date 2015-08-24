@@ -127,7 +127,7 @@ window.Plot = function Plot(selector, func) {
 			var distance = Math.sqrt(Math.pow(e.touches[0].clientX - e.touches[1].clientX, 2) + Math.pow(e.touches[0].clientY - e.touches[1].clientY, 2));
 			var multiplier = distance / lastDistance;
 
-			zoom(multiplier, e.x, e.y);
+			zoom(multiplier, e.touches[0].clientX, e.touches[0].clientY);
 
 			lastDistance = distance;
 		}
