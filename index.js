@@ -25,28 +25,28 @@ window.Plot = function Plot(selector, func) {
 
 		var step = Math.pow(2, ~~(Math.log(100 / scale)/Math.log(2))) * scale;
 
-		context.fillStyle = 'lightgray';
-
 		for(var x = dx % step; x <= canvas.width; x += step) {
 			if(x == dx) continue;
 
-			context.fillRect(x, dy - 2, 1, 4);
+			context.fillStyle = 'lightgray';
 			context.fillRect(x, 0, 1, canvas.height);
+			context.fillStyle = 'black';
+			context.fillRect(x, dy - 2, 1, 4);
 			
- 			context.fillText(((x - dx)/scale).toFixed(2), x, dy + 8);
+ 			context.fillText(((x - dx)/scale).toPrecision(3), x, dy + 10);
 		}
 
 		context.textAlign = "right"; 
 		for(var y = dy % step; y <= canvas.height; y += step) {
 			if(y == dy) continue;
 
-			context.fillRect(dx - 2, y, 4, 1);
+			context.fillStyle = 'lightgray';
 			context.fillRect(0, y, canvas.width, 1);
+			context.fillStyle = 'black';
+			context.fillRect(dx - 2, y, 4, 1);
 			
- 			context.fillText(((dy - y)/scale).toFixed(2), dx - 4, y);
+ 			context.fillText(((dy - y)/scale).toPrecision(3), dx - 6, y);
 		}
-
-		context.fillStyle = 'black';
 
 		context.fillRect(0, dy, canvas.width, 1);
 		context.fillRect(dx, 0, 1, canvas.height);
@@ -57,7 +57,7 @@ window.Plot = function Plot(selector, func) {
 		renderAxis();
 
 		context.lineWidth = 2;
-		context.strokeStyle = "black";
+		context.strokeStyle = 'black';
 		context.beginPath();
 		for(var x = 0; x < canvas.width; x++) {
 			context.lineTo(x, -scale * func((x - dx) / scale) + dy);
