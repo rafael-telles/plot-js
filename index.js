@@ -62,6 +62,11 @@ window.Plot = function Plot(selector, func) {
 		context.arc(currentX, -scale * func((currentX - dx) / scale) + dy, 3, 0, 2 * Math.PI);
 		context.fill();
 	}
+	function renderCoords() {
+		context.textAlign = "left"; 
+ 		context.fillText('x: ' + (currentX - dx)/scale, 5, 10);
+ 		context.fillText('y: ' + func((currentX - dx) / scale), 5, 22);
+	}
 	function render() {
 		clear();
 
@@ -76,6 +81,7 @@ window.Plot = function Plot(selector, func) {
 		context.stroke();
 
 		renderTip();
+		renderCoords();
 	}
 	canvas.addEventListener('mousedown', function(e) {
 		mouseDown = true;
