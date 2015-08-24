@@ -100,7 +100,7 @@ window.Plot = function Plot(selector, func) {
 	});
 	
 	canvas.addEventListener('touchstart', function(e) {
-		lastX = e.touches[0].clientX;
+		currentX = lastX = e.touches[0].clientX;
 		lastY = e.touches[0].clientY;
 
 		if(e.touches.length == 2) {
