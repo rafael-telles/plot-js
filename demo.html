@@ -16,14 +16,13 @@
 	</style>
 </head>
 <body>
-	<h1>Demo</h1>
-	<canvas id="plot" width=700 height=500></canvas>
+	<canvas id="plot"></canvas>
 
 	<script src="index.js"></script>
 	<script>
 		var canvas = document.getElementById('plot');
-		//canvas.width = window.innerWidth;
-		//canvas.height = window.innerHeight;
+		canvas.width = window.innerWidth;
+		canvas.height = window.innerHeight;
 
 		window.plot = new Plot('#plot', function(x) {return x*x;});
 	</script>
