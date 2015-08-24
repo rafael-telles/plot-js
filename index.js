@@ -9,7 +9,7 @@ window.Plot = function Plot(selector, func) {
 	var dx = canvas.width * 0.5;
 	var dy = canvas.height * 0.5;
 
-	var currentX, currentY;
+	var currentX;
 	var lastX, lastY;
 	var mouseDown = false;
 
@@ -87,7 +87,6 @@ window.Plot = function Plot(selector, func) {
 	})
 	canvas.addEventListener('mousemove', function(e) {
 		currentX = e.clientX;
-		correntY = e.clientY;
 
 		if(mouseDown) {
 			dx += e.clientX - lastX;
@@ -116,6 +115,8 @@ window.Plot = function Plot(selector, func) {
 	});
 	
 	canvas.addEventListener('touchmove', function(e) {
+		currentX = e.touches[0].clientX;
+
 		if(e.touches.length == 2) {
 			var distance = Math.sqrt(Math.pow(e.touches[0].clientX - e.touches[1].clientX, 2) + Math.pow(e.touches[0].clientY - e.touches[1].clientY, 2));
 			var multiplier = distance / lastDistance;
