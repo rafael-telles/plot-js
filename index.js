@@ -12,7 +12,7 @@ window.Plot = function Plot(selector, func) {
 	var dy = canvas.height * 0.5;
 
 	var currentX = 0;
-	var lastX, lastY;
+	var lastX = 0, lastY = 0;
 	var mouseDown = false;
 
 	var lastDistance;
