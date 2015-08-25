@@ -1,9 +1,11 @@
 window.Plot = function Plot(selector, func) {
+	var self = this;
+
 	var canvas = this.canvas = document.querySelector(selector);
 	var context = canvas.getContext('2d');
 	var clientRect = canvas.getBoundingClientRect();
 
-	var func = this.func = func;
+	this.func = func;
 
 	var scale = 100;
 	var dx = canvas.width * 0.5;
@@ -59,15 +61,15 @@ window.Plot = function Plot(selector, func) {
 	}
 	function renderTip() {
 		context.beginPath();
-		context.arc(currentX, -scale * func((currentX - dx) / scale) + dy, 3, 0, 2 * Math.PI);
+		context.arc(currentX, -scale * self.func((currentX - dx) / scale) + dy, 3, 0, 2 * Math.PI);
 		context.fill();
 	}
 	function renderCoords() {
 		context.textAlign = "left"; 
  		context.fillText('x: ' + (currentX - dx)/scale, 5, 10);
- 		context.fillText('y: ' + func((currentX - dx) / scale), 5, 22);
+ 		context.fillText('y: ' + self.func((currentX - dx) / scale), 5, 22);
 	}
-	function render() {
+	self.render = function render() {
 		clear();
 
 		renderAxis();
@@ -76,7 +78,7 @@ window.Plot = function Plot(selector, func) {
 		context.strokeStyle = 'black';
 		context.beginPath();
 		for(var x = 0; x < canvas.width; x++) {
-			context.lineTo(x, -scale * func((x - dx) / scale) + dy);
+			context.lineTo(x, -scale * self.func((x - dx) / scale) + dy);
 		}
 		context.stroke();
 
@@ -102,7 +104,7 @@ window.Plot = function Plot(selector, func) {
 			lastY = e.clientY;
 		}
 		
-		render();
+		self.render();
 	});
 	
 	canvas.addEventListener('touchstart', function(e) {
@@ -146,7 +148,7 @@ window.Plot = function Plot(selector, func) {
 			lastY = e.touches[0].clientY;
 		}
 
-		render();
+		self.render();
 	});
 
 	canvas.addEventListener('touchend', function(e) {
@@ -162,9 +164,8 @@ window.Plot = function Plot(selector, func) {
 			multiplier = 1.1;
 		}
 		zoom(multiplier, e.clientX - clientRect.left, e.clientY - clientRect.top);
-		render();
+		self.render();
 	});
-	
 
-	render();
+	self.render();
 };
