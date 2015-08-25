@@ -1,11 +1,11 @@
-window.Plot = function Plot(selector, func) {
+window.Plot = function Plot(selector, f) {
 	var self = this;
 
 	var canvas = this.canvas = document.querySelector(selector);
 	var context = canvas.getContext('2d');
 	var clientRect = canvas.getBoundingClientRect();
 
-	this.func = func;
+	this.f = f;
 
 	var scale = 100;
 	var dx = canvas.width * 0.5;
@@ -18,6 +18,7 @@ window.Plot = function Plot(selector, func) {
 	var lastDistance;
 
 	context.lineCap = 'round';
+	
 	function zoom(multiplier, x, y) {
 		scale *= multiplier;
 		dx = (dx - x) * multiplier + x;
@@ -61,13 +62,13 @@ window.Plot = function Plot(selector, func) {
 	}
 	function renderTip() {
 		context.beginPath();
-		context.arc(currentX, -scale * self.func((currentX - dx) / scale) + dy, 3, 0, 2 * Math.PI);
+		context.arc(currentX, -scale * self.f((currentX - dx) / scale) + dy, 3, 0, 2 * Math.PI);
 		context.fill();
 	}
 	function renderCoords() {
 		context.textAlign = "left"; 
  		context.fillText('x: ' + (currentX - dx)/scale, 5, 10);
- 		context.fillText('y: ' + self.func((currentX - dx) / scale), 5, 22);
+ 		context.fillText('y: ' + self.f((currentX - dx) / scale), 5, 22);
 	}
 	self.render = function render() {
 		clear();
@@ -78,7 +79,7 @@ window.Plot = function Plot(selector, func) {
 		context.strokeStyle = 'black';
 		context.beginPath();
 		for(var x = 0; x < canvas.width; x++) {
-			context.lineTo(x, -scale * self.func((x - dx) / scale) + dy);
+			context.lineTo(x, -scale * self.f((x - dx) / scale) + dy);
 		}
 		context.stroke();
 
