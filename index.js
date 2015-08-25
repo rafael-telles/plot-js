@@ -9,7 +9,7 @@ window.Plot = function Plot(selector, func) {
 	var dx = canvas.width * 0.5;
 	var dy = canvas.height * 0.5;
 
-	var currentX;
+	var currentX = 0;
 	var lastX, lastY;
 	var mouseDown = false;
 
@@ -25,7 +25,7 @@ window.Plot = function Plot(selector, func) {
 		context.clearRect(0, 0, canvas.width, canvas.height);
 	}
 	function renderAxis() {
-		context.font = "10px sans";
+		context.font = "10px Arial";
 		context.textBaseline = 'middle';
 		context.textAlign="center"; 
 
@@ -72,7 +72,7 @@ window.Plot = function Plot(selector, func) {
 
 		renderAxis();
 
-		context.lineWidth = 2;
+		context.lineWidth = 1.5;
 		context.strokeStyle = 'black';
 		context.beginPath();
 		for(var x = 0; x < canvas.width; x++) {
