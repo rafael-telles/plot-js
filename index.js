@@ -18,7 +18,7 @@ window.Plot = function Plot(selector, f) {
 	var lastDistance;
 
 	context.lineCap = 'round';
-	
+
 	function zoom(multiplier, x, y) {
 		scale *= multiplier;
 		dx = (dx - x) * multiplier + x;
@@ -86,6 +86,12 @@ window.Plot = function Plot(selector, f) {
 		renderTip();
 		renderCoords();
 	}
+	self.reset = function reset() {
+		scale = 100;
+		dx = canvas.width * 0.5;
+	    dy = canvas.height * 0.5;
+	}
+	
 	canvas.addEventListener('mousedown', function(e) {
 		mouseDown = true;
 		lastX = e.clientX;
