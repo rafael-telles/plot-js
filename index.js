@@ -1,178 +1,187 @@
-window.Plot = function Plot (selector, f) {
-  var self = this
+window.Plot = function Plot(selector, f) {
+  'use strict';
 
-  var canvas = this.canvas = document.querySelector(selector)
-  var context = canvas.getContext('2d')
-  var clientRect = canvas.getBoundingClientRect()
+  this.f = f;
+  var self = this,
+    canvas = this.canvas = document.querySelector(selector),
+    context = canvas.getContext('2d'),
+    clientRect = canvas.getBoundingClientRect(),
 
-  this.f = f
+    scale = 100,
+    dx = canvas.width * 0.5,
+    dy = canvas.height * 0.5,
 
-  var scale = 100
-  var dx = canvas.width * 0.5
-  var dy = canvas.height * 0.5
+    currentX = 0,
+    lastX = 0,
 
-  var currentX = 0
-  var lastX = 0, lastY = 0
-  var mouseDown = false
+    lastY = 0,
+    mouseDown = false,
 
-  var lastDistance
+    lastDistance;
 
-  context.lineCap = 'round'
+  context.lineCap = 'round';
 
-  function zoom (multiplier, x, y) {
-    scale *= multiplier
-    dx = (dx - x) * multiplier + x
-    dy = (dy - y) * multiplier + y
+  function zoom(multiplier, x, y) {
+    scale *= multiplier;
+    dx = (dx - x) * multiplier + x;
+    dy = (dy - y) * multiplier + y;
   }
-  function clear () {
-    context.clearRect(0, 0, canvas.width, canvas.height)
+
+  function clear() {
+    context.clearRect(0, 0, canvas.width, canvas.height);
   }
-  function renderAxis () {
-    context.font = '10px Arial'
-    context.textBaseline = 'middle'
-    context.textAlign = 'center'
 
-    var step = Math.pow(2, ~~(Math.log(100 / scale) / Math.log(2))) * scale
+  function renderAxis() {
+    var x,
+      y,
+      step = Math.pow(2, (Math.log(100 / scale) / Math.log(2)) | 0) * scale;
 
-    for (var x = dx % step; x <= canvas.width; x += step) {
-      context.fillStyle = 'lightgray'
-      context.fillRect(x, 0, 1, canvas.height)
-      context.fillStyle = 'black'
-      context.fillRect(x, dy - 2, 1, 4)
+    context.font = '10px Arial';
+    context.textBaseline = 'middle';
+    context.textAlign = 'center';
 
-      if (Math.abs(x - dx) < step) continue
+    for (x = dx % step; x <= canvas.width; x += step) {
+      context.fillStyle = 'lightgray';
+      context.fillRect(x, 0, 1, canvas.height);
+      context.fillStyle = 'black';
+      context.fillRect(x, dy - 2, 1, 4);
 
-      context.fillText(((x - dx) / scale).toPrecision(3), x, dy + 10)
+      if (Math.abs(x - dx) >= step) {
+        context.fillText(((x - dx) / scale).toPrecision(3), x, dy + 10);
+      }
     }
 
-    context.textAlign = 'right'
-    for (var y = dy % step; y <= canvas.height; y += step) {
-      context.fillStyle = 'lightgray'
-      context.fillRect(0, y, canvas.width, 1)
-      context.fillStyle = 'black'
-      context.fillRect(dx - 2, y, 4, 1)
+    context.textAlign = 'right';
+    for (y = dy % step; y <= canvas.height; y += step) {
+      context.fillStyle = 'lightgray';
+      context.fillRect(0, y, canvas.width, 1);
+      context.fillStyle = 'black';
+      context.fillRect(dx - 2, y, 4, 1);
 
-      if (Math.abs(y - dy) < step) continue
-
-      context.fillText(((dy - y) / scale).toPrecision(3), dx - 6, y)
+      if (Math.abs(y - dy) >= step) {
+        context.fillText(((dy - y) / scale).toPrecision(3), dx - 6, y);
+      }
     }
 
-    context.fillRect(0, dy, canvas.width, 1)
-    context.fillRect(dx, 0, 1, canvas.height)
+    context.fillRect(0, dy, canvas.width, 1);
+    context.fillRect(dx, 0, 1, canvas.height);
   }
-  function renderTip () {
-    context.beginPath()
-    context.arc(currentX, -scale * self.f((currentX - dx) / scale) + dy, 3, 0, 2 * Math.PI)
-    context.fill()
-  }
-  function renderCoords () {
-    context.textAlign = 'left'
-    context.fillText('x: ' + (currentX - dx) / scale, 5, 10)
-    context.fillText('y: ' + self.f((currentX - dx) / scale), 5, 22)
-  }
-  self.render = function render () {
-    clear()
 
-    renderAxis()
+  function renderTip() {
+    context.beginPath();
+    context.arc(currentX, -scale * self.f((currentX - dx) / scale) + dy, 3, 0, 2 * Math.PI);
+    context.fill();
+  }
 
-    context.lineWidth = 1.5
-    context.strokeStyle = 'black'
-    context.beginPath()
-    for (var x = 0; x < canvas.width; x++) {
-      context.lineTo(x, -scale * self.f((x - dx) / scale) + dy)
+  function renderCoords() {
+    context.textAlign = 'left';
+    context.fillText('x: ' + (currentX - dx) / scale, 5, 10);
+    context.fillText('y: ' + self.f((currentX - dx) / scale), 5, 22);
+  }
+  self.render = function render() {
+    var x;
+
+    clear();
+
+    renderAxis();
+
+    context.lineWidth = 1.5;
+    context.strokeStyle = 'black';
+    context.beginPath();
+    for (x = 0; x < canvas.width; x += 1) {
+      context.lineTo(x, -scale * self.f((x - dx) / scale) + dy);
     }
-    context.stroke()
+    context.stroke();
 
-    renderTip()
-    renderCoords()
-  }
-  self.reset = function reset () {
-    scale = 100
-    dx = canvas.width * 0.5
-    dy = canvas.height * 0.5
-  }
+    renderTip();
+    renderCoords();
+  };
+  self.reset = function reset() {
+    scale = 100;
+    dx = canvas.width * 0.5;
+    dy = canvas.height * 0.5;
+  };
 
   canvas.addEventListener('mousedown', function (e) {
-    mouseDown = true
-    lastX = e.clientX
-    lastY = e.clientY
-  })
+    mouseDown = true;
+    lastX = e.clientX;
+    lastY = e.clientY;
+  });
   canvas.addEventListener('mouseup', function (e) {
-    mouseDown = false
-  })
+    mouseDown = false;
+  });
   canvas.addEventListener('mousemove', function (e) {
-    currentX = e.clientX
+    currentX = e.clientX;
 
     if (mouseDown) {
-      dx += e.clientX - lastX
-      dy += e.clientY - lastY
+      dx += e.clientX - lastX;
+      dy += e.clientY - lastY;
 
-      lastX = e.clientX
-      lastY = e.clientY
+      lastX = e.clientX;
+      lastY = e.clientY;
     }
 
-    self.render()
-  })
+    self.render();
+  });
 
   canvas.addEventListener('touchstart', function (e) {
-    currentX = lastX = e.touches[0].clientX
-    lastY = e.touches[0].clientY
+    currentX = lastX = e.touches[0].clientX;
+    lastY = e.touches[0].clientY;
 
-    if (e.touches.length == 2) {
-      lastDistance = Math.sqrt(Math.pow(e.touches[0].clientX - e.touches[1].clientX, 2) + Math.pow(e.touches[0].clientY - e.touches[1].clientY, 2))
+    if (e.touches.length === 2) {
+      lastDistance = Math.sqrt(Math.pow(e.touches[0].clientX - e.touches[1].clientX, 2) + Math.pow(e.touches[0].clientY - e.touches[1].clientY, 2));
 
-      var averageX = (e.touches[0].clientX + e.touches[1].clientX) * 0.5
-      var averageY = (e.touches[0].clientY + e.touches[1].clientY) * 0.5
+      var averageX = (e.touches[0].clientX + e.touches[1].clientX) * 0.5,
+        averageY = (e.touches[0].clientY + e.touches[1].clientY) * 0.5;
 
-      lastX = averageX
-      lastY = averageY
+      lastX = averageX;
+      lastY = averageY;
     }
-  })
+  });
 
   canvas.addEventListener('touchmove', function (e) {
-    currentX = e.touches[0].clientX
+    currentX = e.touches[0].clientX;
 
-    if (e.touches.length == 2) {
-      var distance = Math.sqrt(Math.pow(e.touches[0].clientX - e.touches[1].clientX, 2) + Math.pow(e.touches[0].clientY - e.touches[1].clientY, 2))
-      var multiplier = distance / lastDistance
+    if (e.touches.length === 2) {
+      var distance = Math.sqrt(Math.pow(e.touches[0].clientX - e.touches[1].clientX, 2) + Math.pow(e.touches[0].clientY - e.touches[1].clientY, 2)),
+        multiplier = distance / lastDistance,
+        averageX = (e.touches[0].clientX + e.touches[1].clientX) * 0.5,
+        averageY = (e.touches[0].clientY + e.touches[1].clientY) * 0.5;
+      zoom(multiplier, averageX, averageY);
 
-      var averageX = (e.touches[0].clientX + e.touches[1].clientX) * 0.5
-      var averageY = (e.touches[0].clientY + e.touches[1].clientY) * 0.5
-      zoom(multiplier, averageX, averageY)
+      lastDistance = distance;
 
-      lastDistance = distance
+      dx += averageX - lastX;
+      dy += averageY - lastY;
 
-      dx += averageX - lastX
-      dy += averageY - lastY
-
-      lastX = averageX
-      lastY = averageY
+      lastX = averageX;
+      lastY = averageY;
     } else {
-      dx += e.touches[0].clientX - lastX
-      dy += e.touches[0].clientY - lastY
+      dx += e.touches[0].clientX - lastX;
+      dy += e.touches[0].clientY - lastY;
 
-      lastX = e.touches[0].clientX
-      lastY = e.touches[0].clientY
+      lastX = e.touches[0].clientX;
+      lastY = e.touches[0].clientY;
     }
 
-    self.render()
-  })
+    self.render();
+  });
 
   canvas.addEventListener('touchend', function (e) {
-    if (e.touches.length == 1) {
-      lastX = e.touches[0].clientX
-      lastY = e.touches[0].clientY
+    if (e.touches.length === 1) {
+      lastX = e.touches[0].clientX;
+      lastY = e.touches[0].clientY;
     }
-  })
+  });
 
   canvas.addEventListener('wheel', function (e) {
-    var multiplier = 0.9
+    var multiplier = 0.9;
     if (e.deltaY < 0) {
-      multiplier = 1.1
+      multiplier = 1.1;
     }
-    zoom(multiplier, e.clientX - clientRect.left, e.clientY - clientRect.top)
-    self.render()
-  })
+    zoom(multiplier, e.clientX - clientRect.left, e.clientY - clientRect.top);
+    self.render();
+  });
 
-  self.render()
-}
+  self.render();
+};
